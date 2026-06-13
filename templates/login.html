@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Ecclesia Hub — Login</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',sans-serif;background:#0f1117;color:#e8ecf4;display:flex;align-items:center;justify-content:center;min-height:100vh;}
+.box{background:#1a1f2e;border-radius:14px;padding:44px 40px;width:380px;text-align:center;}
+.cross{font-size:3rem;color:#4f8ef7;margin-bottom:8px;}
+h1{font-size:1.3rem;margin-bottom:4px;}
+p{font-size:.8rem;color:#8b92a9;margin-bottom:28px;}
+.field{margin-bottom:14px;text-align:left;}
+.field label{font-size:.78rem;color:#8b92a9;display:block;margin-bottom:4px;}
+.field input{width:100%;background:#0f1117;border:1px solid #252a3d;color:#e8ecf4;padding:10px 12px;border-radius:7px;font-size:.9rem;outline:none;}
+.field input:focus{border-color:#4f8ef7;}
+.btn{width:100%;padding:11px;background:#4f8ef7;color:#fff;border:none;border-radius:7px;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:8px;}
+.btn:hover{background:#3a7ae8;}
+.hint{font-size:.73rem;color:#8b92a9;margin-top:18px;}
+.alert{padding:8px 12px;border-radius:6px;font-size:.8rem;margin-bottom:12px;background:#3d1a1a;color:#e05c5c;border-left:3px solid #e05c5c;}
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="cross">✝</div>
+  <h1>Ecclesia Hub</h1>
+  <p>Church Management System</p>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for cat, msg in messages %}<div class="alert">{{ msg }}</div>{% endfor %}
+  {% endwith %}
+  <form method="POST">
+    <div class="field"><label>Username</label><input name="username" autofocus/></div>
+    <div class="field"><label>Password</label><input name="password" type="password"/></div>
+    <button class="btn" type="submit">Sign In</button>
+  </form>
+  <div class="hint">Default: admin / admin123</div>
+</div>
+</body>
+</html>

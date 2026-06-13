@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Members{% endblock %}
+{% block subtitle %}All registered church members{% endblock %}
+{% block topbar_action %}<a href="/members/add" class="btn btn-success">+ Add Member</a>{% endblock %}
+{% block content %}
+<form class="toolbar" method="GET">
+  <input name="search" placeholder="Search name, ID, phone…" value="{{ search }}"/>
+  <select name="ministry"><option value="All">All Ministries</option>
+  {% for m in ministries %}<option {% if m==ministry %}selected{% endif %}>{{ m }}</option>{% endfor %}</select>
+  <button class="btn btn-primary" type="submit">Search</button>
+</form>
+<div class="table-wrap"><table>
+  <thead><tr><th>ID</th><th>Full Name</th><th>Phone</th><th>Gender</th><th>Age</th><th>Ministry</th><th>Joined</th><th>Actions</th></tr></thead>
+  <tbody>
+  {% for m in members %}
+  <tr>
+    <td><span class="badge badge-blue">{{ m.member_id }}</span></td>
+    <td>{{ m.full_name }}</td><td>{{ m.phone or '—' }}</td><td>{{ m.gender or '—' }}</td>
+    <td>{{ m.age or '—' }}</td><td>{{ m.ministry or '—' }}</td><td>{{ m.joined_date or '—' }}</td>
+    <td style="display:flex;gap:6px">
+      <a href="/members/edit/{{ m.member_id }}" class="btn btn-ghost btn-sm">✏ Edit</a>
+      {% if user.role == 'super_admin' %}<a href="/members/delete/{{ m.member_id }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete?')">🗑</a>{% endif %}
+    </td>
+  </tr>
+  {% else %}<tr><td colspan="8" style="text-align:center;color:#8b92a9;padding:24px">No members found.</td></tr>{% endfor %}
+  </tbody>
+</table></div>
+{% endblock %}

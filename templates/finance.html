@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Finance{% endblock %}
+{% block subtitle %}Automated financial records & summaries{% endblock %}
+{% block topbar_action %}<a href="/finance/add" class="btn btn-success">+ Record Transaction</a>{% endblock %}
+{% block content %}
+<form class="toolbar" method="GET">
+  <select name="month" style="background:#1a1f2e;border:1px solid #252a3d;color:#e8ecf4;padding:8px 12px;border-radius:6px">
+    {% for m in range(1,13) %}<option value="{{ m }}" {% if m==month %}selected{% endif %}>{{ ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m] }}</option>{% endfor %}
+  </select>
+  <input name="year" type="number" value="{{ year }}" style="width:90px;background:#1a1f2e;border:1px solid #252a3d;color:#e8ecf4;padding:8px 12px;border-radius:6px"/>
+  <button class="btn btn-primary" type="submit">View</button>
+  <a href="/finance/yearly?year={{ year }}" class="btn btn-ghost">📊 Yearly</a>
+</form>
+<div class="summary-grid">
+  {% for type, amount in summary.items() %}{% if type != 'TOTAL' %}
+  <div class="summary-item"><div class="s-label">{{ type }}</div><div class="s-value">GHS {{ "%.2f"|format(amount) }}</div></div>
+  {% endif %}{% endfor %}
+  <div class="summary-item" style="border:1px solid #4f8ef7">
+    <div class="s-label">TOTAL THIS MONTH</div>
+    <div class="s-value" style="color:#4f8ef7;font-size:1.3rem">GHS {{ "%.2f"|format(summary.get('TOTAL',0)) }}</div>
+  </div>
+</div>
+<div class="table-wrap"><table>
+  <thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Recorded By</th><th>Notes</th><th>Actions</th></tr></thead>
+  <tbody>
+  {% for t in transactions %}
+  <tr>
+    <td>{{ t.trans_date }}</td><td><span class="badge badge-blue">{{ t.type }}</span></td>
+    <td style="color:#3ecf8e;font-weight:700">GHS {{ "%.2f"|format(t.amount) }}</td>
+    <td>{{ t.recorded_by }}</td><td>{{ t.notes or '—' }}</td>
+    <td>{% if user.role=='super_admin' %}<a href="/finance/delete/{{ t.id }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete?')">🗑</a>{% endif %}</td>
+  </tr>
+  {% else %}<tr><td colspan="6" style="text-align:center;color:#8b92a9;padding:24px">No transactions this month.</td></tr>{% endfor %}
+  </tbody>
+</table></div>
+{% endblock %}

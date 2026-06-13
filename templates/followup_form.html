@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Add Follow-Up{% endblock %}
+{% block subtitle %}Manual pastoral follow-up entry{% endblock %}
+{% block content %}
+<div class="form-card"><form method="POST">
+  <div class="form-row">
+    <div class="form-group"><label>Member ID</label><input name="member_id" required/></div>
+    <div class="form-group"><label>Full Name</label><input name="full_name" required/></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>Phone</label><input name="phone"/></div>
+    <div class="form-group"><label>Follow-Up Date</label><input name="follow_up_date" type="date" required/></div>
+  </div>
+  <div class="form-group"><label>Reason</label><input name="reason"/></div>
+  <div class="form-group"><label>Action Taken</label><input name="action_taken"/></div>
+  <div class="form-group"><label>Outcome</label><select name="outcome">{% for o in outcomes %}<option>{{ o }}</option>{% endfor %}</select></div>
+  <button class="btn btn-success" type="submit">💾 Save</button>
+  <a href="/followups" class="btn btn-ghost" style="margin-left:8px">Cancel</a>
+</form></div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Follow-Ups{% endblock %}
+{% block subtitle %}Pastoral care & absence tracking{% endblock %}
+{% block topbar_action %}<a href="/followups/add" class="btn btn-success">+ Manual Entry</a>{% endblock %}
+{% block content %}
+<div class="toolbar">
+  <a href="/followups?resolved=0" class="btn {% if not resolved %}btn-primary{% else %}btn-ghost{% endif %}">Active</a>
+  <a href="/followups?resolved=1" class="btn {% if resolved %}btn-primary{% else %}btn-ghost{% endif %}">Resolved</a>
+  <a href="/followups/autodetect" class="btn btn-warn">⚡ Auto-Detect</a>
+</div>
+<div class="table-wrap"><table>
+  <thead><tr><th>Name</th><th>Phone</th><th>Reason</th><th>Action Taken</th><th>Outcome</th><th>Date</th><th>Type</th><th>Actions</th></tr></thead>
+  <tbody>
+  {% for f in followups %}
+  <tr>
+    <td>{{ f.full_name }}</td><td>{{ f.phone or '—' }}</td><td>{{ f.reason or '—' }}</td>
+    <td>{{ f.action_taken or '—' }}</td>
+    <td>{% if f.outcome=='Returning' %}<span class="badge badge-green">{{ f.outcome }}</span>
+    {% elif f.outcome=='Needs Support' %}<span class="badge badge-warn">{{ f.outcome }}</span>
+    {% elif f.outcome in ['Unreachable','Left Church'] %}<span class="badge badge-danger">{{ f.outcome }}</span>
+    {% else %}<span class="badge badge-gray">{{ f.outcome or 'Pending' }}</span>{% endif %}</td>
+    <td>{{ f.follow_up_date or '—' }}</td>
+    <td><span class="badge {% if f.flagged_auto %}badge-purple{% else %}badge-blue{% endif %}">{{ '🤖 Auto' if f.flagged_auto else 'Manual' }}</span></td>
+    <td style="display:flex;gap:4px">
+      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('e{{ f.id }}').style.display='block'">✏</button>
+      {% if not f.resolved %}<a href="/followups/resolve/{{ f.id }}" class="btn btn-success btn-sm">✅</a>{% endif %}
+    </td>
+  </tr>
+  <tr id="e{{ f.id }}" style="display:none;background:#202535">
+    <td colspan="8">
+      <form method="POST" action="/followups/update/{{ f.id }}" style="display:flex;gap:8px;flex-wrap:wrap;padding:8px">
+        <input name="reason" placeholder="Reason" value="{{ f.reason or '' }}" style="background:#0f1117;border:1px solid #252a3d;color:#e8ecf4;padding:6px 10px;border-radius:5px;font-size:.8rem"/>
+        <input name="action_taken" placeholder="Action Taken" value="{{ f.action_taken or '' }}" style="background:#0f1117;border:1px solid #252a3d;color:#e8ecf4;padding:6px 10px;border-radius:5px;font-size:.8rem"/>
+        <select name="outcome" style="background:#0f1117;border:1px solid #252a3d;color:#e8ecf4;padding:6px 10px;border-radius:5px;font-size:.8rem">
+          {% for o in outcomes %}<option {% if o==f.outcome %}selected{% endif %}>{{ o }}</option>{% endfor %}
+        </select>
+        <input name="follow_up_date" type="date" value="{{ f.follow_up_date or '' }}" style="background:#0f1117;border:1px solid #252a3d;color:#e8ecf4;padding:6px 10px;border-radius:5px;font-size:.8rem"/>
+        <label style="color:#e8ecf4;font-size:.8rem;display:flex;align-items:center;gap:4px"><input type="checkbox" name="resolved"> Resolved</label>
+        <button class="btn btn-primary btn-sm" type="submit">Save</button>
+      </form>
+    </td>
+  </tr>
+  {% else %}<tr><td colspan="8" style="text-align:center;color:#8b92a9;padding:24px">No follow-ups found.</td></tr>{% endfor %}
+  </tbody>
+</table></div>
+{% endblock %}

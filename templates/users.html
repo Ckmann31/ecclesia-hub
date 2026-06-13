@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}User Management{% endblock %}
+{% block subtitle %}System access control & roles{% endblock %}
+{% block topbar_action %}<a href="/users/add" class="btn btn-success">+ Create User</a>{% endblock %}
+{% block content %}
+<div class="table-wrap"><table>
+  <thead><tr><th>ID</th><th>Username</th><th>Full Name</th><th>Role</th><th>Created</th><th>Actions</th></tr></thead>
+  <tbody>
+  {% for u in users %}
+  <tr>
+    <td>{{ u.id }}</td><td>{{ u.username }}</td><td>{{ u.full_name }}</td>
+    <td>{% if u.role=='super_admin' %}<span class="badge badge-danger">Super Admin</span>
+    {% elif u.role=='admin' %}<span class="badge badge-warn">Admin</span>
+    {% elif u.role=='leader' %}<span class="badge badge-blue">Leader</span>
+    {% else %}<span class="badge badge-gray">Data Entry</span>{% endif %}</td>
+    <td>{{ u.created_at }}</td>
+    <td>{% if u.username != user.username %}
+      <a href="/users/delete/{{ u.id }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete this user?')">🗑 Delete</a>
+      {% else %}<span style="color:#8b92a9;font-size:.75rem">Current user</span>{% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% endblock %}

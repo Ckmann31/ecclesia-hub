@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit Member' if member else 'Add Member' }}{% endblock %}
+{% block subtitle %}{{ 'Update member details' if member else 'Register a new member' }}{% endblock %}
+{% block content %}
+<div class="form-card"><form method="POST">
+  <div class="form-row">
+    <div class="form-group"><label>Full Name</label><input name="full_name" required value="{{ member.full_name if member else '' }}"/></div>
+    <div class="form-group"><label>Phone Number</label><input name="phone" value="{{ member.phone if member else '' }}"/></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>Gender</label><select name="gender">
+      <option {% if member and member.gender=='Male' %}selected{% endif %}>Male</option>
+      <option {% if member and member.gender=='Female' %}selected{% endif %}>Female</option>
+    </select></div>
+    <div class="form-group"><label>Age</label><input name="age" type="number" value="{{ member.age if member else '' }}"/></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>Ministry</label><select name="ministry">
+      {% for m in ministries %}<option {% if member and member.ministry==m %}selected{% endif %}>{{ m }}</option>{% endfor %}
+    </select></div>
+    <div class="form-group"><label>Date Joined</label><input name="joined_date" type="date" value="{{ member.joined_date if member else '' }}"/></div>
+  </div>
+  <button class="btn btn-success" type="submit">💾 Save Member</button>
+  <a href="/members" class="btn btn-ghost" style="margin-left:8px">Cancel</a>
+</form></div>
+{% endblock %}

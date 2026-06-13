@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Attendance{% endblock %}
+{% block subtitle %}Mark Sunday attendance for all members{% endblock %}
+{% block content %}
+<form class="toolbar" method="GET">
+  <select name="date">{% for s in sundays %}<option {% if s==selected %}selected{% endif %}>{{ s }}</option>{% endfor %}</select>
+  <button class="btn btn-primary" type="submit">Load</button>
+</form>
+{% if records %}
+<form method="POST" action="/attendance/mark">
+  <input type="hidden" name="sunday_date" value="{{ selected }}"/>
+  <div style="margin-bottom:12px;display:flex;gap:8px">
+    <button class="btn btn-success" type="submit">💾 Save Attendance</button>
+    <button class="btn btn-ghost" type="button" onclick="document.querySelectorAll('input[type=checkbox]').forEach(c=>c.checked=true)">✅ Mark All Present</button>
+    <button class="btn btn-ghost" type="button" onclick="document.querySelectorAll('input[type=checkbox]').forEach(c=>c.checked=false)">❌ Clear All</button>
+  </div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Member ID</th><th>Full Name</th><th>Ministry</th><th style="text-align:center">Present</th></tr></thead>
+    <tbody>
+    {% for r in records %}
+    <tr>
+      <td><span class="badge badge-blue">{{ r.member_id }}</span></td>
+      <td>{{ r.full_name }}</td><td>{{ r.ministry or '—' }}</td>
+      <td style="text-align:center"><input type="checkbox" name="present" value="{{ r.member_id }}" {% if r.present %}checked{% endif %} style="width:18px;height:18px;cursor:pointer"/></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+</form>
+{% else %}<div style="color:#8b92a9;padding:24px">No members found.</div>{% endif %}
+{% endblock %}

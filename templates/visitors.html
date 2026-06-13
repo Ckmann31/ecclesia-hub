@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Visitors{% endblock %}
+{% block subtitle %}Track church visitors and follow-up status{% endblock %}
+{% block topbar_action %}<a href="/visitors/add" class="btn btn-success">+ Add Visitor</a>{% endblock %}
+{% block content %}
+<form class="toolbar" method="GET">
+  <input name="search" placeholder="Search…" value="{{ search }}"/>
+  <select name="status"><option value="All">All Statuses</option>
+  {% for s in statuses %}<option {% if s==status %}selected{% endif %}>{{ s }}</option>{% endfor %}</select>
+  <button class="btn btn-primary" type="submit">Filter</button>
+</form>
+<div class="table-wrap"><table>
+  <thead><tr><th>Name</th><th>Phone</th><th>Visit Date</th><th>Invited By</th><th>Status</th><th>Leader</th><th>Actions</th></tr></thead>
+  <tbody>
+  {% for v in visitors %}
+  <tr>
+    <td>{{ v.full_name }}</td><td>{{ v.phone or '—' }}</td><td>{{ v.visit_date }}</td>
+    <td>{{ v.invited_by or 'Walk-in' }}</td>
+    <td>{% if v.follow_up_status=='Completed' %}<span class="badge badge-green">{{ v.follow_up_status }}</span>
+    {% elif v.follow_up_status=='Converted to Member' %}<span class="badge badge-purple">{{ v.follow_up_status }}</span>
+    {% elif v.follow_up_status=='In Progress' %}<span class="badge badge-warn">{{ v.follow_up_status }}</span>
+    {% else %}<span class="badge badge-gray">{{ v.follow_up_status }}</span>{% endif %}</td>
+    <td>{{ v.assigned_leader or '—' }}</td>
+    <td style="display:flex;gap:4px">
+      <form method="POST" action="/visitors/update/{{ v.id }}" style="display:inline-flex;gap:4px">
+        <select name="status" style="background:#0f1117;border:1px solid #252a3d;color:#e8ecf4;border-radius:5px;font-size:.75rem;padding:3px 6px">
+          {% for s in statuses %}<option {% if s==v.follow_up_status %}selected{% endif %}>{{ s }}</option>{% endfor %}
+        </select>
+        <button class="btn btn-primary btn-sm" type="submit">✓</button>
+      </form>
+      <a href="/visitors/delete/{{ v.id }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete?')">🗑</a>
+    </td>
+  </tr>
+  {% else %}<tr><td colspan="7" style="text-align:center;color:#8b92a9;padding:24px">No visitors found.</td></tr>{% endfor %}
+  </tbody>
+</table></div>
+{% endblock %}

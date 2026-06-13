@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block subtitle %}Welcome back, {{ user.full_name }}{% endblock %}
+{% block content %}
+<div class="stat-grid">
+  <div class="stat-card"><div class="icon">👥</div><div class="value" style="color:#4f8ef7">{{ stats.members }}</div><div class="label">Total Members</div></div>
+  <div class="stat-card"><div class="icon">🙋</div><div class="value" style="color:#3ecf8e">{{ stats.visitors }}</div><div class="label">Visitors This Month</div></div>
+  <div class="stat-card"><div class="icon">📋</div><div class="value" style="color:#f0a500">{{ stats.followups }}</div><div class="label">Pending Follow-Ups</div></div>
+  <div class="stat-card"><div class="icon">💰</div><div class="value" style="color:#9b8ef7;font-size:1.1rem">GHS {{ "%.2f"|format(stats.finance) }}</div><div class="label">Finance This Month</div></div>
+  <div class="stat-card"><div class="icon">🤝</div><div class="value" style="color:#3ecf8e">{{ stats.volunteers }}</div><div class="label">Active Volunteers</div></div>
+</div>
+<div class="section-head">
+  <h2>⚠ Members Requiring Follow-Up</h2>
+  <a href="/followups/autodetect" class="btn btn-warn btn-sm">⚡ Run Auto-Detection</a>
+</div>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Name</th><th>Phone</th><th>Reason</th><th>Action</th><th>Flagged On</th></tr></thead>
+  <tbody>
+  {% for p in pending %}
+  <tr><td>{{ p.full_name }}</td><td>{{ p.phone or '—' }}</td><td>{{ p.reason or '—' }}</td>
+  <td><span class="badge badge-warn">{{ p.action_taken or 'Pending' }}</span></td><td>{{ p.created_at }}</td></tr>
+  {% else %}
+  <tr><td colspan="5" style="text-align:center;color:#8b92a9;padding:24px">✅ No pending follow-ups</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

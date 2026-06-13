@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Record Transaction{% endblock %}
+{% block subtitle %}Add a new financial entry{% endblock %}
+{% block content %}
+<div class="form-card"><form method="POST">
+  <div class="form-row">
+    <div class="form-group"><label>Date</label><input name="trans_date" type="date" required/></div>
+    <div class="form-group"><label>Type</label><select name="type">{% for t in offering_types %}<option>{{ t }}</option>{% endfor %}</select></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>Amount (GHS)</label><input name="amount" type="number" step="0.01" required/></div>
+    <div class="form-group"><label>Recorded By</label><input name="recorded_by" value="{{ recorded_by }}"/></div>
+  </div>
+  <div class="form-group"><label>Notes (optional)</label><textarea name="notes" rows="2"></textarea></div>
+  <button class="btn btn-success" type="submit">💾 Save Transaction</button>
+  <a href="/finance" class="btn btn-ghost" style="margin-left:8px">Cancel</a>
+</form></div>
+{% endblock %}

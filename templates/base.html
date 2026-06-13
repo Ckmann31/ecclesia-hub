@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Ecclesia Hub</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#0f1117;--sidebar:#13161f;--card:#1a1f2e;--card2:#202535;--accent:#4f8ef7;--green:#3ecf8e;--warn:#f0a500;--danger:#e05c5c;--purple:#9b8ef7;--text:#e8ecf4;--sub:#8b92a9;--border:#252a3d;}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;}
+.sidebar{width:230px;min-height:100vh;background:var(--sidebar);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:100;}
+.sidebar-logo{padding:24px 20px 12px;border-bottom:1px solid var(--border);}
+.sidebar-logo h2{font-size:1rem;color:var(--accent);font-weight:700;}
+.sidebar-logo span{font-size:.75rem;color:var(--sub);}
+.sidebar-user{padding:12px 20px;border-bottom:1px solid var(--border);}
+.sidebar-user .name{font-size:.85rem;font-weight:600;}
+.sidebar-user .role{font-size:.72rem;color:var(--sub);text-transform:capitalize;}
+nav a{display:flex;align-items:center;gap:10px;padding:11px 20px;color:var(--sub);text-decoration:none;font-size:.875rem;transition:.15s;}
+nav a:hover,nav a.active{background:var(--card);color:var(--accent);}
+.sidebar-footer{margin-top:auto;padding:16px 20px;border-top:1px solid var(--border);}
+.sidebar-footer a{color:var(--danger);font-size:.85rem;text-decoration:none;}
+.main{margin-left:230px;flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.topbar{padding:20px 32px 0;display:flex;justify-content:space-between;align-items:center;}
+.topbar h1{font-size:1.4rem;font-weight:700;}
+.topbar .sub{font-size:.8rem;color:var(--sub);margin-top:2px;}
+.content{padding:20px 32px 40px;}
+.stat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:28px;}
+.stat-card{background:var(--card);border-radius:10px;padding:18px 16px;text-align:center;}
+.stat-card .icon{font-size:1.6rem;margin-bottom:6px;}
+.stat-card .value{font-size:1.5rem;font-weight:700;}
+.stat-card .label{font-size:.75rem;color:var(--sub);margin-top:2px;}
+.table-wrap{background:var(--card);border-radius:10px;overflow:hidden;margin-top:12px;}
+table{width:100%;border-collapse:collapse;}
+thead th{background:var(--sidebar);color:var(--accent);font-size:.78rem;font-weight:600;padding:12px 14px;text-align:left;}
+tbody tr{border-bottom:1px solid var(--border);}
+tbody tr:last-child{border-bottom:none;}
+tbody td{padding:11px 14px;font-size:.83rem;}
+tbody tr:hover{background:var(--card2);}
+.toolbar{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+.toolbar input,.toolbar select{background:var(--card);border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:6px;font-size:.83rem;outline:none;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:6px;font-size:.83rem;font-weight:600;cursor:pointer;border:none;text-decoration:none;transition:.15s;}
+.btn-primary{background:var(--accent);color:#fff;}.btn-primary:hover{background:#3a7ae8;}
+.btn-success{background:var(--green);color:#fff;}.btn-success:hover{background:#2db87a;}
+.btn-warn{background:var(--warn);color:#fff;}.btn-warn:hover{background:#d9940a;}
+.btn-danger{background:var(--danger);color:#fff;}.btn-danger:hover{background:#c94a4a;}
+.btn-ghost{background:var(--card2);color:var(--text);}.btn-ghost:hover{background:var(--border);}
+.btn-sm{padding:5px 10px;font-size:.75rem;}
+.form-card{background:var(--card);border-radius:10px;padding:28px;max-width:580px;}
+.form-group{margin-bottom:16px;}
+.form-group label{display:block;font-size:.8rem;color:var(--sub);margin-bottom:5px;}
+.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:6px;font-size:.85rem;outline:none;font-family:inherit;}
+.form-group input:focus,.form-group select:focus{border-color:var(--accent);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:.72rem;font-weight:600;}
+.badge-green{background:#1a3d2e;color:var(--green);}.badge-blue{background:#1a2b4a;color:var(--accent);}
+.badge-warn{background:#3d2e0a;color:var(--warn);}.badge-danger{background:#3d1a1a;color:var(--danger);}
+.badge-purple{background:#2a1a4a;color:var(--purple);}.badge-gray{background:var(--border);color:var(--sub);}
+.alert{padding:10px 16px;border-radius:6px;font-size:.83rem;margin-bottom:14px;}
+.alert-success{background:#1a3d2e;color:var(--green);border-left:3px solid var(--green);}
+.alert-error{background:#3d1a1a;color:var(--danger);border-left:3px solid var(--danger);}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.section-head h2{font-size:1rem;font-weight:600;color:var(--accent);}
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px;}
+.summary-item{background:var(--card);border-radius:8px;padding:14px 16px;}
+.summary-item .s-label{font-size:.75rem;color:var(--sub);}
+.summary-item .s-value{font-size:1.1rem;font-weight:700;color:var(--green);margin-top:4px;}
+</style>
+</head>
+<body>
+<div class="sidebar">
+  <div class="sidebar-logo"><h2>✝ Ecclesia Hub</h2><span>Powered by Faith</span></div>
+  <div class="sidebar-user">
+    <div class="name">{{ user.full_name }}</div>
+    <div class="role">{{ user.role.replace('_',' ') }}</div>
+  </div>
+  <nav>
+    <a href="/dashboard" {% if request.path=='/dashboard' %}class="active"{% endif %}>🏠 Dashboard</a>
+    <a href="/members" {% if '/members' in request.path %}class="active"{% endif %}>👥 Members</a>
+    <a href="/visitors" {% if '/visitors' in request.path %}class="active"{% endif %}>🙋 Visitors</a>
+    <a href="/followups" {% if '/followups' in request.path %}class="active"{% endif %}>📋 Follow-Ups</a>
+    <a href="/finance" {% if '/finance' in request.path %}class="active"{% endif %}>💰 Finance</a>
+    <a href="/attendance" {% if '/attendance' in request.path %}class="active"{% endif %}>🗓 Attendance</a>
+    <a href="/volunteers" {% if '/volunteers' in request.path %}class="active"{% endif %}>🤝 Volunteers</a>
+    {% if user.role == 'super_admin' %}<a href="/users" {% if '/users' in request.path %}class="active"{% endif %}>⚙️ Users</a>{% endif %}
+  </nav>
+  <div class="sidebar-footer"><a href="/logout">🚪 Log Out</a></div>
+</div>
+<div class="main">
+  <div class="topbar">
+    <div><h1>{% block title %}{% endblock %}</h1><div class="sub">{% block subtitle %}{% endblock %}</div></div>
+    <div>{% block topbar_action %}{% endblock %}</div>
+  </div>
+  <div class="content">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for cat, msg in messages %}<div class="alert alert-{{ cat }}">{{ msg }}</div>{% endfor %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </div>
+</div>
+</body>
+</html>

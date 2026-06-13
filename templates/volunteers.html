@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Volunteers{% endblock %}
+{% block subtitle %}Ministry volunteer management{% endblock %}
+{% block topbar_action %}<a href="/volunteers/add" class="btn btn-success">+ Add Volunteer</a>{% endblock %}
+{% block content %}
+<form class="toolbar" method="GET">
+  <select name="ministry"><option value="All">All Ministries</option>
+  {% for m in ministries %}<option {% if m==ministry %}selected{% endif %}>{{ m }}</option>{% endfor %}</select>
+  <button class="btn btn-primary" type="submit">Filter</button>
+</form>
+<div class="table-wrap"><table>
+  <thead><tr><th>Name</th><th>Ministry</th><th>Role</th><th>Availability</th><th>Attendance Rate</th><th>Actions</th></tr></thead>
+  <tbody>
+  {% for v in volunteers %}
+  <tr>
+    <td>{{ v.full_name }}</td><td><span class="badge badge-blue">{{ v.ministry }}</span></td>
+    <td>{{ v.role or '—' }}</td><td>{{ v.availability or '—' }}</td>
+    <td><span class="badge {% if v.attendance_rate>=75 %}badge-green{% elif v.attendance_rate>=50 %}badge-warn{% else %}badge-danger{% endif %}">{{ v.attendance_rate }}%</span></td>
+    <td style="display:flex;gap:4px;flex-wrap:wrap">
+      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('a{{ v.member_id }}').style.display='block'">🗓 Attendance</button>
+      {% if user.role=='super_admin' %}<a href="/volunteers/remove/{{ v.member_id }}" class="btn btn-danger btn-sm" onclick="return confirm('Remove?')">🗑</a>{% endif %}
+    </td>
+  </tr>
+  <tr id="a{{ v.member_id }}" style="display:none;background:#202535">
+    <td colspan="6">
+      <form method="POST" action="/volunteers/attendance/{{ v.member_id }}" style="display:flex;gap:8px;align-items:center;padding:6px">
+        <input name="service_date" type="date" style="background:#0f1117;border:1px solid #252a3d;color:#e8ecf4;padding:6px 10px;border-radius:5px"/>
+        <label style="color:#e8ecf4;font-size:.82rem;display:flex;align-items:center;gap:4px"><input type="checkbox" name="present"> Present</label>
+        <button class="btn btn-primary btn-sm" type="submit">Save</button>
+      </form>
+    </td>
+  </tr>
+  {% else %}<tr><td colspan="6" style="text-align:center;color:#8b92a9;padding:24px">No volunteers found.</td></tr>{% endfor %}
+  </tbody>
+</table></div>
+{% endblock %}

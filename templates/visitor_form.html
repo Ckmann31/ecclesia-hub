@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Add Visitor{% endblock %}
+{% block subtitle %}Record a new church visitor{% endblock %}
+{% block content %}
+<div class="form-card"><form method="POST">
+  <div class="form-row">
+    <div class="form-group"><label>Full Name</label><input name="full_name" required/></div>
+    <div class="form-group"><label>Phone Number</label><input name="phone"/></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>Visit Date</label><input name="visit_date" type="date" required/></div>
+    <div class="form-group"><label>Invited By</label><input name="invited_by" placeholder="Member name or Walk-in"/></div>
+  </div>
+  <div class="form-group"><label>Assigned Leader</label><input name="assigned_leader"/></div>
+  <div class="form-group"><label>Notes</label><textarea name="notes" rows="2"></textarea></div>
+  <button class="btn btn-success" type="submit">💾 Save Visitor</button>
+  <a href="/visitors" class="btn btn-ghost" style="margin-left:8px">Cancel</a>
+</form></div>
+{% endblock %}

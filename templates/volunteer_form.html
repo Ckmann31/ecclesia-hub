@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Add Volunteer{% endblock %}
+{% block subtitle %}Register a ministry volunteer{% endblock %}
+{% block content %}
+<div class="form-card"><form method="POST">
+  <div class="form-group"><label>Member ID</label><input name="member_id" required placeholder="e.g. CM20260001"/></div>
+  <div class="form-row">
+    <div class="form-group"><label>Ministry</label><select name="ministry">{% for m in ministries %}<option>{{ m }}</option>{% endfor %}</select></div>
+    <div class="form-group"><label>Role</label><input name="role" placeholder="e.g. Team Lead"/></div>
+  </div>
+  <div class="form-group"><label>Availability</label><select name="availability">{% for a in availabilities %}<option>{{ a }}</option>{% endfor %}</select></div>
+  <button class="btn btn-success" type="submit">💾 Save</button>
+  <a href="/volunteers" class="btn btn-ghost" style="margin-left:8px">Cancel</a>
+</form></div>
+{% endblock %}
