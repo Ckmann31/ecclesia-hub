@@ -82,7 +82,10 @@ tbody tr:hover{background:var(--card2);}
     <a href="/volunteers" {% if '/volunteers' in request.path %}class="active"{% endif %}>🤝 Volunteers</a>
     {% if user.role == 'super_admin' %}<a href="/users" {% if '/users' in request.path %}class="active"{% endif %}>⚙️ Users</a>{% endif %}
   </nav>
-  <div class="sidebar-footer"><a href="/logout">🚪 Log Out</a></div>
+  <div class="sidebar-footer">
+    <a href="/change-password" style="display:block;color:#8b92a9;font-size:.82rem;text-decoration:none;margin-bottom:8px;">🔑 Change Password</a>
+    <a href="/logout">🚪 Log Out</a>
+  </div>
 </div>
 <div class="main">
   <div class="topbar">

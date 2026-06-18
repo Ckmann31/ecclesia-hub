@@ -256,6 +256,27 @@ def user_delete(user_id):
     auth.delete_user(user_id); flash("User deleted.", "success")
     return redirect(url_for("users_page"))
 
+
+@app.route("/change-password", methods=["GET","POST"])
+@login_required
+def change_password():
+    if request.method == "POST":
+        current = request.form["current_password"]
+        new_pw  = request.form["new_password"]
+        confirm = request.form["confirm_password"]
+        if new_pw != confirm:
+            flash("New passwords do not match.", "error")
+            return redirect(url_for("change_password"))
+        # Verify current password
+        user = auth.login(me().get("username"), current)
+        if not user:
+            flash("Current password is incorrect.", "error")
+            return redirect(url_for("change_password"))
+        auth.change_password(me().get("id"), new_pw)
+        flash("Password updated successfully!", "success")
+        return redirect(url_for("dashboard"))
+    return render_template("change_password.html", user=me())
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)
